@@ -1,14 +1,42 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast_web/sembast_web.dart';
+import 'home_page.dart';
+import 'init.dart';
 import 'package:tekartik_app_flutter_sembast/sembast.dart';
 import 'package:tekartik_app_platform/app_platform.dart';
 
+
+
+/*
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // Declare our store (records are mapd, ids are ints)
+  var store = intMapStoreFactory.store();
+  var factory = databaseFactoryWeb;
+
+  // Open the database
+  var db = await factory.openDatabase('test');
+
+  // Add a new record
+  var key =
+      await store.add(db, <String, Object?>{'name': 'Table', 'price': 15});
+
+  // Read the record
+  var value = await store.record(key).get(db);
+
+  // Print the value
+  print(value);
+
+  // Close the database
+  await db.close();
+}
+*/
+
+
+Future main() async {
+   WidgetsFlutterBinding.ensureInitialized();
   platformInit();
   var packageName = 'com.tekartik.demosembast';
 
@@ -23,6 +51,10 @@ Future main() async {
 var valueKey = 'value';
 var store = StoreRef<String, int>.main();
 var record = store.record(valueKey);
+
+
+
+//) => runApp(const CakeApp());
 
 class MyAppBloc {
   final DatabaseFactory databaseFactory;
@@ -61,17 +93,20 @@ class MyAppBloc {
   }
 }
 
-class MyApp extends StatelessWidget {
-  final MyAppBloc bloc;
+class CakeApp extends StatefulWidget {
+  const CakeApp({super.key});
+  @override
+  _CakeAppState createState() => _CakeAppState();
+}
 
-  const MyApp({Key? key, required this.bloc}) : super(key: key);
+class _CakeAppState extends State<CakeApp> {
+  final Future _init =  Init.initialize();
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sembast Demo',
-      theme: ThemeData(
+      title: 'My Favorite Cakes',
+       theme: ThemeData(
         // This is the theme of your application.
         //
         // Try running your application with 'flutter run'. You'll see the
@@ -83,85 +118,25 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(
-        title: 'Sembast Demo',
-        bloc: bloc,
+      home: HomePage(),
+      
+      /*
+      FutureBuilder(
+        future: _init,
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done){
+            return HomePage();
+          } else {
+            return const Material(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        },
       ),
+      */
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  final MyAppBloc bloc;
-
-  const MyHomePage({Key? key, required this.title, required this.bloc})
-      : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked 'final'.
-
-  final String title;
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<int>(
-        stream: widget.bloc.counter,
-        builder: (context, snapshot) {
-          var count = snapshot.data;
-          return Scaffold(
-            appBar: AppBar(
-              // Here we take the value from the MyHomePage object that was created by
-              // the App.build method, and use it to set our appbar title.
-              title: Text(widget.title),
-            ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  if (count != null) ...[
-                    if (kIsWeb)
-                      Text(
-                        '(You can open multiples tabs and see that they are synchronized)',
-                      ),
-                    Text(
-                      'You have pushed the button this many times:',
-                    ),
-                    Text('$count',
-                        style:
-                            // ignore: deprecated_member_use
-                            Theme.of(context).textTheme.headline4)
-                  ]
-                ],
-              ),
-            ),
-            floatingActionButton: count != null
-                ? FloatingActionButton(
-                    onPressed: () {
-                      widget.bloc.increment();
-                    },
-                    tooltip: 'Increment',
-                    child: Icon(Icons.add),
-                  )
-                : null,
-          );
-        });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.bloc.dispose();
-  }
-}
