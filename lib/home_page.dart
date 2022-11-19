@@ -4,9 +4,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
+import 'package:sembast_websample/Webdatabase.dart';
 import 'package:sembast_websample/cake.dart';
 import 'package:sembast_websample/cake_repository.dart';
 import 'sembast_cake_repository.dart';
+import 'Webdatabase.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,6 +24,9 @@ class _HomePageState extends State<HomePage> {
   String firstkey = '';
   String secondkey = '';
   final focusNode = FocusNode();
+  WebDatabase web = WebDatabase();  
+
+
 
   @override
   void initState() {
