@@ -8,7 +8,7 @@ import 'package:sembast_websample/sembast_cake_repository.dart';
 
 class Init {
   static Future initialize() async {
-    //await _initSembast();
+    await _initSembast();
     _registerRepositories();
   }
 
