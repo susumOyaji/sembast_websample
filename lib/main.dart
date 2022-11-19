@@ -10,7 +10,7 @@ import 'package:tekartik_app_platform/app_platform.dart';
 
 
 
-/*
+
 Future main() async {
   // Declare our store (records are mapd, ids are ints)
   var store = intMapStoreFactory.store();
@@ -26,16 +26,18 @@ Future main() async {
   // Read the record
   var value = await store.record(key).get(db);
 
+  runApp(const MyApp());
+
   // Print the value
   print(value);
 
   // Close the database
   await db.close();
 }
-*/
 
 
-Future main() async {
+/*
+Future main1() async {
    WidgetsFlutterBinding.ensureInitialized();
   platformInit();
   var packageName = 'com.tekartik.demosembast';
@@ -47,6 +49,7 @@ Future main() async {
     bloc: bloc,
   ));
 }
+*/
 
 var valueKey = 'value';
 var store = StoreRef<String, int>.main();
@@ -96,9 +99,9 @@ class MyAppBloc {
 
 
 class MyApp extends StatelessWidget {
-  final MyAppBloc bloc;
+  //final MyAppBloc bloc;
 
-  const MyApp({Key? key, required this.bloc}) : super(key: key);
+  const MyApp({Key? key, /*required this.bloc*/}) : super(key: key);
 
   // This widget is the root of your application.
   @override

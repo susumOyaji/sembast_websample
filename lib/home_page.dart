@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  CakeRepository _cakeRepository = GetIt.I.get();
+  final CakeRepository _cakeRepository = GetIt.I.get();
   List<Cake> _cakes = [];
   int Anything = 0; //dumy
   var controller = TextEditingController();
