@@ -1,13 +1,13 @@
-import 'cake.dart';
+import 'model/cake.dart';
 
 abstract class CakeRepository {
-  Future<int> insertCake(Cake cake);
+  Future<int> insertCake(Cakes cake);
 
-  Future updateCake(Cake cake);
+  Future updateCake(Cakes cake);
 
   Future deleteCake(int cakeId);
 
-  Future<List<Cake>> getAllCakes();
+  Future<List<Cakes>> getAllCakes();
 
   Future sort();
 

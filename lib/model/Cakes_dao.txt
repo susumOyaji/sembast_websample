@@ -1,0 +1,57 @@
+import 'package:sembast/sembast.dart';
+//import 'package:sembast_websample/db/data_base.dart';
+import 'package:sembast_websample/model/cake.dart';
+
+class CakesDao {
+  static const String folderName = "Cakes";
+  final _cakesFolder = intMapStoreFactory.store(folderName);
+
+  Future<Database> get _db async => await AppDatabase.instance.database;
+
+  Future insertCakes(Cakes cakes) async {
+    await _cakesFolder.add(await _db, cakes.toMap());
+  }
+
+  Future updateCakes(Cakes cakes) async {
+    final finder = Finder(filter: Filter.byKey(cakes.name));
+    await _cakesFolder.update(await _db, cakes.toMap(), finder: finder);
+  }
+
+  Future delete(Cakes cakes) async {
+    final finder = Finder(filter: Filter.byKey(cakes.name));
+    await _cakesFolder.delete(await _db, finder: finder);
+  }
+
+  Future<List<Cakes>> getAllCakes() async {
+    final recordSnapshot = await _cakesFolder.find(await _db);
+    return recordSnapshot.map((snapshot) {
+      final cakes = Cakes.fromMap(snapshot.value);
+      return cakes;
+    }).toList();
+  }
+
+  Future sortCake() async {
+    // Look for any animal "greater than" (alphabetically) 'cat'
+    // ordered by name
+    var finder = Finder(
+        //filter: Filter.greaterThan('name', 'cat'),
+        sortOrders: [SortOrder('name')]);
+    var records = await store.find(db, finder: finder);
+
+    print(finder);
+    //Finder(filter: Filter.greaterThan('name', 'cat'), sortOrders: [SortOrder('name')]);
+  }
+}
+
+
+/*
+int lampKey;
+int chairKey;
+
+// Import the data
+var map = jsonDecode(saved) as Map;
+var importedDb = await importDatabase(map, databaseFactory, 'imported.db');
+
+// Check the lamp price
+expect((await store.record(lampKey).get(importedDb))['price'], 12);
+*/

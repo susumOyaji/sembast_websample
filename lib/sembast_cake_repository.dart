@@ -2,23 +2,25 @@ import 'dart:math';
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/utils/value_utils.dart';
-import 'package:sembast_websample/cake.dart';
+import 'package:sembast_websample/model/cake.dart';
 import 'package:sembast_websample/cake_repository.dart';
+import 'Webdatabase.dart';
 
 //import 'package:test/test.dart';
 
 class SembastCakeRepository extends CakeRepository {
   final Database _database = GetIt.I.get();
+  //final WebDatabase _database = WebDatabase();
   final StoreRef _store = intMapStoreFactory.store("cake_store2");
 
   @override
-  Future<int> insertCake(Cake cake) async {
-    return await _store.add(_database, cake.toMap());
+  Future<int> insertCake(Cakes cakes) async {
+    return await _store.add(_database, cakes.toMap());
   }
 
   @override
-  Future updateCake(Cake cake) async {
-    await _store.record(cake.id).update(_database, cake.toMap());
+  Future updateCake(Cakes cakes) async {
+    await _store.record(cakes.id).update(_database, cakes.toMap());
   }
 
   @override
@@ -27,15 +29,15 @@ class SembastCakeRepository extends CakeRepository {
   }
 
   @override
-  Future<List<Cake>> getAllCakes() async {
+  Future<List<Cakes>> getAllCakes() async {
     final snapshots = await _store.find(_database);
     return snapshots
-        .map((snapshot) => Cake.fromMap(snapshot.key, snapshot.value))
+        .map((snapshot) => Cakes.fromMap(snapshot.key, snapshot.value))
         .toList(growable: false);
   }
 
-  Future<List<Cake>> sort() async {
-    List<Cake> idmap = [];
+  Future<List<Cakes>> sort() async {
+    List<Cakes> idmap = [];
 
     var finder = Finder(
         //filter: Filter.greaterThan('name', 'yummyness'),
@@ -45,15 +47,15 @@ class SembastCakeRepository extends CakeRepository {
     for (int i = 0; i < record.length; ++i) {
       var map = cloneMap(record[i].value);
       var key = record[i].key;
-      Cake sortcake = Cake.fromMap(key, map);
+      Cakes sortcake = Cakes.fromMap(key, map);
       idmap.add(sortcake);
     }
 
     return idmap;
   }
 
-  Future<List<Cake>> search(String firstkey) async {
-    List<Cake> idmap = [];
+  Future<List<Cakes>> search(String firstkey) async {
+    List<Cakes> idmap = [];
     // Read by key
     var finder = Finder(
         //filter: Filter.greaterThan('name', 'yummyness'),
@@ -65,7 +67,7 @@ class SembastCakeRepository extends CakeRepository {
     for (int i = 0; i < record.length; ++i) {
       var map = cloneMap(record[i].value);
       var key = record[i].key;
-      Cake sortcake = Cake.fromMap(key, map);
+      Cakes sortcake = Cakes.fromMap(key, map);
       idmap.add(sortcake);
     }
     return idmap;

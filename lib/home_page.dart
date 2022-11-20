@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast_websample/Webdatabase.dart';
-import 'package:sembast_websample/cake.dart';
+import 'package:sembast_websample/model/cake.dart';
 import 'package:sembast_websample/cake_repository.dart';
 import 'sembast_cake_repository.dart';
 import 'Webdatabase.dart';
@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final CakeRepository _cakeRepository = GetIt.I.get();
-  List<Cake> _cakes = [];
+  List<Cakes> _cakes = [];
   int Anything = 0; //dumy
   var controller = TextEditingController();
   bool isCaseSensitive = false;
@@ -169,27 +169,27 @@ class _HomePageState extends State<HomePage> {
       yummyness = secondkey; //Random().nextInt(10);
     }
 
-    final newCake = Cake(id: Anything, name: name, yummyness: yummyness);
+    final newCake = Cakes(id: Anything, name: name, yummyness: yummyness);
     await _cakeRepository.insertCake(newCake);
     _loadCakes();
   }
 
-  _deleteCake(Cake cake) async {
-    await _cakeRepository.deleteCake(cake.id);
+  _deleteCake(Cakes cakes) async {
+    await _cakeRepository.deleteCake(cakes.id);
     _loadCakes();
   }
 
-  _editCake(Cake cake) async {
+  _editCake(Cakes cakes) async {
     final list = ["apple", "orange", "chocolate"]..shuffle();
     final name = "My yummy ${list.first} cake";
-    final updatedCake = cake.copyWith(
-        id: cake.id, name: cake.name, yummyness: cake.yummyness + '1');
+    final updatedCake = cakes.copyWith(
+        id: cakes.id, name: cakes.name, yummyness: cakes.yummyness + '1');
     await _cakeRepository.updateCake(updatedCake);
     _loadCakes();
   }
 
   _sort() async {
-    List<Cake> sortresult = await _cakeRepository.sort();
+    List<Cakes> sortresult = await _cakeRepository.sort();
     setState(() => _cakes = sortresult);
     //_loadCakes();
   }
@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
           "Board to $firstkey  by $secondkey Contaner"; //"My yummy ${list.first} cake";
     }
     if (location == 'p') {
-      List<Cake> sortresult = await _cakeRepository.search(firstkey);
+      List<Cakes> sortresult = await _cakeRepository.search(firstkey);
 
       setState(() => _cakes = sortresult);
       print(_cakes.length);
@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
 
     //final id = 1;
     final yummyness = secondkey; // Random().nextInt(10);
-    final newCake = Cake(id: Anything, name: name, yummyness: yummyness);
+    final newCake = Cakes(id: Anything, name: name, yummyness: yummyness);
     await _cakeRepository.insertCake(newCake);
     _loadCakes();
   }
