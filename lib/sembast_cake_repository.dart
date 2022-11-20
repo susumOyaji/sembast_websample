@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:get_it/get_it.dart';
+//import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/utils/value_utils.dart';
 import 'package:sembast_websample/model/cake.dart';
@@ -9,8 +9,8 @@ import 'Webdatabase.dart';
 //import 'package:test/test.dart';
 
 class SembastCakeRepository extends CakeRepository {
-  final Database _database = GetIt.I.get();
-  //final WebDatabase _database = WebDatabase();
+  //final Database _database = GetIt.I.get();
+  final WebDatabase _database = WebDatabase();
   final StoreRef _store = intMapStoreFactory.store("cake_store2");
 
   @override
