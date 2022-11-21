@@ -8,10 +8,18 @@ import 'Webdatabase.dart';
 
 //import 'package:test/test.dart';
 
-class SembastCakeRepository extends CakeRepository {
+class CakeDao  {
   //final Database _database = GetIt.I.get();
-  final WebDatabase _database = WebDatabase();
-  final StoreRef _store = intMapStoreFactory.store("cake_store2");
+  //final WebDatabase _database = WebDatabase();
+  //final StoreRef _store = intMapStoreFactory.store("cake_store2");
+  
+  //static const String folderName = "Books";
+  final _store = intMapStoreFactory.store("cake_store2");
+
+  Future<Database> get _database async => await WebDatabase.instance.database;
+
+
+  
 
   @override
   Future<int> insertCake(Cakes cakes) async {
@@ -39,6 +47,7 @@ class SembastCakeRepository extends CakeRepository {
   Future<List<Cakes>> sort() async {
     List<Cakes> idmap = [];
 
+    _database.add
     var finder = Finder(
         //filter: Filter.greaterThan('name', 'yummyness'),
         sortOrders: [SortOrder('yummyness')]);

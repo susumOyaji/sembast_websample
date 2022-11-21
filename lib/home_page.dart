@@ -2,12 +2,13 @@ import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+//import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast_websample/Webdatabase.dart';
+import 'package:sembast_websample/model/Cakes_dao.dart';
 import 'package:sembast_websample/model/cake.dart';
 import 'package:sembast_websample/cake_repository.dart';
-import 'sembast_cake_repository.dart';
+//import 'sembast_cake_repository.txt';
 import 'Webdatabase.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final CakeRepository _cakeRepository = GetIt.I.get();
+  //final CakeRepository _cakeRepository = GetIt.I.get();
   List<Cakes> _cakes = [];
   int Anything = 0; //dumy
   var controller = TextEditingController();
@@ -24,14 +25,13 @@ class _HomePageState extends State<HomePage> {
   String firstkey = '';
   String secondkey = '';
   final focusNode = FocusNode();
-  WebDatabase web = WebDatabase();  
-
-
+  CakesDao web = CakesDao();
 
   @override
   void initState() {
     super.initState();
-    _loadCakes();
+    _initCakes();
+    //_loadCakes();
     //_sort();
   }
 
@@ -150,8 +150,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  _initCakes() async {
+    await web.initCakes();
+  }
+
   _loadCakes() async {
-    final cakes = await _cakeRepository.getAllCakes();
+    final cakes = await web.getAllCakes();
     setState(() => _cakes = cakes);
   }
 
@@ -170,12 +174,12 @@ class _HomePageState extends State<HomePage> {
     }
 
     final newCake = Cakes(id: Anything, name: name, yummyness: yummyness);
-    await _cakeRepository.insertCake(newCake);
+    await web.insertCakes(newCake);
     _loadCakes();
   }
 
   _deleteCake(Cakes cakes) async {
-    await _cakeRepository.deleteCake(cakes.id);
+    await web.delete(cakes);
     _loadCakes();
   }
 
@@ -184,12 +188,12 @@ class _HomePageState extends State<HomePage> {
     final name = "My yummy ${list.first} cake";
     final updatedCake = cakes.copyWith(
         id: cakes.id, name: cakes.name, yummyness: cakes.yummyness + '1');
-    await _cakeRepository.updateCake(updatedCake);
+    await web.updateCakes(updatedCake);
     _loadCakes();
   }
 
   _sort() async {
-    List<Cakes> sortresult = await _cakeRepository.sort();
+    List<Cakes> sortresult = await web.sortCake();
     setState(() => _cakes = sortresult);
     //_loadCakes();
   }
@@ -211,7 +215,7 @@ class _HomePageState extends State<HomePage> {
           "Board to $firstkey  by $secondkey Contaner"; //"My yummy ${list.first} cake";
     }
     if (location == 'p') {
-      List<Cakes> sortresult = await _cakeRepository.search(firstkey);
+      List<Cakes> sortresult = await web.search(firstkey);
 
       setState(() => _cakes = sortresult);
       print(_cakes.length);
@@ -221,7 +225,7 @@ class _HomePageState extends State<HomePage> {
     //final id = 1;
     final yummyness = secondkey; // Random().nextInt(10);
     final newCake = Cakes(id: Anything, name: name, yummyness: yummyness);
-    await _cakeRepository.insertCake(newCake);
+    await web.insertCakes(newCake);
     _loadCakes();
   }
 }

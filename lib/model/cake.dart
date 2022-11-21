@@ -1,4 +1,4 @@
-import 'package:flutter/rendering.dart';
+//import 'package:flutter/rendering.dart';
 
 class Cakes {
   final int id;
@@ -7,17 +7,16 @@ class Cakes {
 
   Cakes({required this.id, required this.name, required this.yummyness});
 
-  Map<String, dynamic> toMap() {
-    return {'name': this.name, 'yummyness': this.yummyness};
-  }
+  factory Cakes.fromMap(int id, Map<String, dynamic> json) => Cakes(
+        id: id,
+        name: json['name'],
+        yummyness: json['yummyness'],
+      );
 
-  factory Cakes.fromMap(int id, Map<String, dynamic> map) {
-    return Cakes(
-      id: id,
-      name: map['name'],
-      yummyness: map['yummyness'],
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        'name': this.name,
+        'yummyness': this.yummyness,
+      };
 
   Cakes copyWith(
       {required int id, required String name, required String yummyness}) {

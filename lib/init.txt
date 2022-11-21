@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:sembast_websample/cake_repository.dart';
-import 'package:sembast_websample/sembast_cake_repository.dart';
+import 'package:sembast_websample/sembast_cake_repository.txt';
 
 class Init {
   static Future initialize() async {
