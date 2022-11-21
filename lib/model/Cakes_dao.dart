@@ -32,13 +32,19 @@ class CakesDao {
     var key = await _cakesFolder
         .add(await _db, <String, Object?>{'name': 'Table', 'price': '15'});
 
-    // Read the record
     var value = await _cakesFolder.record(key).get(await _db);
+
+    key = await _cakesFolder
+        .add(await _db, <String, Object?>{'name': 'Table', 'price': '20'});
+
+    // Read the record
+    var value2 = await _cakesFolder.record(key).get(await _db);
 
     //void main() => runApp(MyApp());
 
     // Print the value
     print(value);
+    print(value2);
     // Close the database
     //await db.close();*/
   }
