@@ -1,15 +1,39 @@
-import 'package:sembast/sembast.dart';
 //import 'package:sembast_websample/db/data_base.txt';
+import 'package:sembast_websample/mainORG.dart';
 import 'package:sembast_websample/model/cake.dart';
 import 'package:sembast/utils/value_utils.dart';
 import 'package:sembast_web/sembast_web.dart';
 import 'package:sembast/sembast.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sembast/sembast_io.dart';
+import 'package:sembast/sembast_memory.dart';
 
 class CakesDao {
-  //static const String folderName = "Cakes";
-  final _cakesFolder = intMapStoreFactory.store();
-  var factory = databaseFactoryWeb;
+  // DBのインスタンスはDatabaseで定義します
+  //Database db;
 
+  // Pathの取得およびDBを開く処理は非同期のため初期化処理をasyncで囲みます。
+  // Pathはsqflite の getDatbasePath()でも取得することができます。
+  void init() async {
+    // get the application documents directory
+    var dir = await getApplicationDocumentsDirectory();
+    // make sure it exists
+    await dir.create(recursive: true);
+    // build the database path
+    var dbPath = join(dir.path, 'my_database.db');
+    // open the database
+    var db = await databaseFactoryIo.openDatabase(dbPath);
+
+
+
+    
+
+
+  //static const String folderName = "Cakes";
+  final store = intMapStoreFactory.store();
+  var factory = /*databaseFactoryWeb;*/ databaseFactoryMemoryFs;
+  //var _db; // open the database
   //final Database _database = GetIt.I.get();
   //final WebDatabase _database = WebDatabase();
   //final StoreRef _store = intMapStoreFactory.store("cake_store2");
@@ -17,10 +41,14 @@ class CakesDao {
   //static const String folderName = "Books";
   //final _store = intMapStoreFactory.store("cake_store2");
 
-  Future<Database> get _db async => await factory
-      .openDatabase('test1'); //await WebDatabase.instance.database;
+  //Future<Database> get _db async => await factory
+  //    .openDatabase('test1'); //await WebDatabase.instance.database;
+  Future<Database> get _db async =>
+      await databaseFactoryMemoryFs.openDatabase('test1');
+  //var store = intMapStoreFactory.store('my_store');
 
   Future initCakes() async {
+    //////////////////////////////
     // Declare our store (records are mapd, ids are ints)
     //var store = intMapStoreFactory.store();
     //var factory = databaseFactoryWeb;
@@ -29,16 +57,16 @@ class CakesDao {
     //var db = await factory.openDatabase('test');
 
     // Add a new record
-    var key = await _cakesFolder
+    var key = await store
         .add(await _db, <String, Object?>{'name': 'Table', 'price': '15'});
 
-    var value = await _cakesFolder.record(key).get(await _db);
+    var value = await store.record(key).get(await _db);
 
-    key = await _cakesFolder
+    key = await store
         .add(await _db, <String, Object?>{'name': 'Table', 'price': '20'});
 
     // Read the record
-    var value2 = await _cakesFolder.record(key).get(await _db);
+    var value2 = await store.record(key).get(await _db);
 
     //void main() => runApp(MyApp());
 
@@ -53,25 +81,28 @@ class CakesDao {
   //    await factory.openDatabase('test'); //await AppDatabase.instance.database;
 
   Future insertCakes(Cakes cakes) async {
-    await _cakesFolder.add(await _db, cakes.toMap());
+    await store.add(await _db, cakes.toMap());
   }
 
   Future updateCakes(Cakes cakes) async {
     final finder = Finder(filter: Filter.byKey(cakes.name));
-    await _cakesFolder.update(await _db, cakes.toMap(), finder: finder);
+    await store.update(await _db, cakes.toMap(), finder: finder);
   }
 
   Future delete(Cakes cakes) async {
     final finder = Finder(filter: Filter.byKey(cakes.name));
-    await _cakesFolder.delete(await _db, finder: finder);
+    await store.delete(await _db, finder: finder);
   }
 
   Future<List<Cakes>> getAllCakes() async {
-    final recordSnapshot = await _cakesFolder.find(await _db);
-    return recordSnapshot.map((snapshot) {
-      final cakes = Cakes.fromMap(snapshot.key, snapshot.value);
-      return cakes;
-    }).toList();
+    List<Cakes> idmap = [];
+    // Read by key
+    var finder = Finder(
+        //filter: Filter.greaterThan('name', 'cat'),
+        sortOrders: [SortOrder('name')]);
+    var record = await store.find(await _db, finder: finder);
+    print(record);
+    return idmap;
   }
 
   Future sortCake() async {
@@ -80,9 +111,10 @@ class CakesDao {
     var finder = Finder(
         //filter: Filter.greaterThan('name', 'cat'),
         sortOrders: [SortOrder('name')]);
-    var records = await _cakesFolder.find(await _db, finder: finder);
+    var records = await store.find(await _db, finder: finder);
 
     print(finder);
+    //print((record.length).toString());
     //Finder(filter: Filter.greaterThan('name', 'cat'), sortOrders: [SortOrder('name')]);
   }
 
@@ -94,7 +126,7 @@ class CakesDao {
         sortOrders: [SortOrder('yummyness')]);
 
     var finder1 = Finder(sortOrders: [SortOrder(Field.value, false)]);
-    var record = await _cakesFolder.find(await _db, finder: finder);
+    var record = await store.find(await _db, finder: finder);
 
     for (int i = 0; i < record.length; ++i) {
       var map = cloneMap(record[i].value);
