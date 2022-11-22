@@ -7,7 +7,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast_websample/Webdatabase.dart';
 import 'package:sembast_websample/model/Cakes_dao.dart';
 import 'package:sembast_websample/model/cake.dart';
-import 'package:sembast_websample/cake_repository.dart';
+//import 'package:sembast_websample/cake_repository.txt';
 //import 'sembast_cake_repository.txt';
 import 'Webdatabase.dart';
 
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initCakes();
-    //_loadCakes();
+    _loadCakes();
     //_sort();
   }
 

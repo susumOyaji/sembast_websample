@@ -7,21 +7,20 @@ import 'home_page.dart';
 //import 'init.txt';
 import 'package:tekartik_app_flutter_sembast/sembast.dart';
 import 'package:tekartik_app_platform/app_platform.dart';
+import 'package:sembast/sembast_memory.dart';
 
-//Future main() async {
-// Declare our store (records are mapd, ids are ints)
-/*var store = intMapStoreFactory.store();
-  var factory = databaseFactoryWeb;
+/*
+Future main() async {
+  final db = await databaseFactoryMemoryFs.openDatabase('record_demo.db');
+  var store = intMapStoreFactory.store('my_store');
 
-  // Open the database
-  var db = await factory.openDatabase('test');
-
-  // Add a new record
-  var key =
-      await store.add(db, <String, Object?>{'name': 'Table', 'price': 15});
-
-  // Read the record
-  var value = await store.record(key).get(db);
+  var key = await store.add(db, {'name': 'ugly'});
+  var record = await (store.record(key).getSnapshot(db)
+      as FutureOr<RecordSnapshot<int, Map<String, Object>>>);
+  record =
+      (await store.find(db, finder: Finder(filter: Filter.byKey(record.key))))
+          .first as RecordSnapshot<int, Map<String, Object>>;
+  print(record);
 */
 void main() => runApp(MyApp());
 /*
